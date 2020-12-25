@@ -2,6 +2,10 @@
 
 ------------
 
+if you think that my time deserve a coffe
+buymeacoff.ee/jericofx
+
+------------
 
 Take from the original resource and modified to work with Qbus based servers, almost everything is working like:
 
