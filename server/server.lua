@@ -40,6 +40,32 @@ AddEventHandler('t1ger_mechanicjob:fetchMechShops', function()
     end
 
 end)
+
+RegisterServerEvent('t1ger_mechanicjob:fireEmployee')
+AddEventHandler('t1ger_mechanicjob:fireEmployee', function(id, plyIdentifier)
+    local xPlayer = RSCore.Functions.GetPlayer(source)
+    exports['ghmattimysql']:execute("SELECT * FROM t1ger_mechanic WHERE shopID = @shopID", {['@shopID'] = id}, function(data)
+        if data[1].employees ~= nil then
+            local employees = json.decode(data[1].employees)
+            if #employees > 0 then 
+                for k,v in pairs(employees) do 
+                    if plyIdentifier == v.identifier then 
+                        table.remove(employees, k)
+                        exports['ghmattimysql']:execute("UPDATE t1ger_mechanic SET employees = @employees WHERE shopID = @shopID", {
+                            ['@employees'] = json.encode(employees),
+                            ['@shopID'] = id
+                        })
+                        local xTarget = RSCore.Functions.GetPlayer(plyIdentifier)
+                        xTarget.Functions.SetJob("unemployed", 1)
+                        TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xTarget.PlayerData.source, Lang['mech_employee_fired'])
+                        break
+                    end
+                end
+            end
+        end
+    end)
+end)
+
 RSCore.Functions.CreateCallback('t1ger_mechanicjob:getIfVehicleOwned', function (source, cb, plate)
     local xPlayer = RSCore.Functions.GetPlayer(source)
     local found = nil

@@ -449,22 +449,21 @@ end
 	 local assert = assert
 	 local menu = assert(MenuV)
 	 local Manage = MenuV:CreateMenu("Employee List", '', 'topleft', 255, 0, 0, 'size-150')
+	 local Manage1 = MenuV:CreateMenu("Fire?", '', 'topleft', 255, 0, 0, 'size-150')
 	 MenuV:OpenMenu(Manage, function()
 	 end)
-	 local confirm = Manage:AddConfirm({ icon = '🔥', label = 'Fire Employee?', value = false })
+	-- local confirm = Manage:AddConfirm({ icon = '🔥', label = 'Fire Employee?', value = false })
 
 	 RSCore.Functions.TriggerCallback("t1ger_mechanicjob:getEmployees", function(employees)
-		--print(employees)
+		if employees ~= nil then
 		 for k, v in ipairs(employees) do
 				button3 = Manage:AddButton({ icon = "🧑‍🔧	", label = v.firstname.." "..v.lastname.." | "..v.jobGrade, value = v, select = function(btn)
 					local data = btn.Value
-					confirm:On("confirm",function()
-						OpenEmployeeData(data.current,data.current.data,id,val)
-					
-					end)
-
+					--print("Data current "..tostring(data.firstname).." | "..id.." | "..tostring(val))
+					OpenEmployeeData(data,data,id,val)
+				--	
 				end })
-			--end
+			end
 		 end
 	 end, id)
 
@@ -474,18 +473,30 @@ end
  
  -- Get Employee Menu Data
  function OpenEmployeeData(info, user, id, val)
+
 	 local elements = {
 		 {label = Lang["fire_employee"], value = "fire_employee"},
 		 {label = Lang["employee_job_grade"], value = "job_grade_manage"}
 	 }
 	 local assert = assert
 	local menu = assert(MenuV)
-	 local ShellMenu = MenuV:CreateMenu("| Employee Menu | ","Price: $", 'size-150')
+	 local ShellMenu = MenuV:CreateMenu("Employee: "..user.firstname,"", 'size-150')
+	 local Firemenu = MenuV:CreateMenu("Fire "..user.firstname,"", 'size-150')
 	 MenuV:OpenMenu(ShellMenu, function()
 	end)
-	local buybutton = BuyMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["fire_employee"],value = "fire_employee",description = 'Fire Employee'  })
-	local firebutton = BuyMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["employee_job_grade"],value = "job_grade_manage",description = 'Grade Manager'  })
-
+	local buybutton = ShellMenu:AddButton({icon ="🧑‍🔧 	",label = "Fire?",value = "fire_employee",description = 'Fire Employee'  })
+	local firebutton = ShellMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["employee_job_grade"],value = "job_grade_manage",description = 'Grade Manager'  })
+	local confirm = Firemenu:AddConfirm({ icon = '🔥', label = 'Fire Employee?', value = false })	
+	buybutton:On("select",function()
+		MenuV:OpenMenu(Firemenu)
+		
+		confirm:On("confirm",function()
+			print("From Confirm"..user.identifier)
+			TriggerServerEvent('t1ger_mechanicjob:fireEmployee',id,user.identifier)
+		end)
+	
+	end)
+	
 
 
 
