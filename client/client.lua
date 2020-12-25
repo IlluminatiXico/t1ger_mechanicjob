@@ -217,7 +217,7 @@ function MechShopManageMenu(id, val)
 		{ label = Lang["sell_mech_shop"], value = 2 },
 		{ label = Lang["employees_action"], value = 3 },
 		{ label = Lang["accounts_action"], value = 4 },
-		{ label = "Close Menu", value = 5 }
+	--	{ label = "Close Menu", value = 5 }
 	}
 
 	local assert = assert
@@ -289,12 +289,12 @@ function MechShopManageMenu(id, val)
 		AccountsMainMenu(id, val)
 
 	end)
-	button4:On("select",function()
+	--[[ button4:On("select",function()
 
 		Manage1:Close()
 		Manage:Close()
 
-	end)
+	end) ]]
 end
  
 
