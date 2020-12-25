@@ -2715,6 +2715,45 @@ end
 		 {label = "Find Call", value = "find_job"},
 		 {label = "Cancel Job", value = "cancel_job"}
 	 }
+	 local assert = assert
+		local menu = assert(MenuV)
+	 local NpCMenu = MenuV:CreateMenu("NPC Job Menu","", 'size-150')
+
+	 MenuV:OpenMenu(NpCMenu, function()
+	end)
+	
+
+
+	for k,v in ipairs(elements) do
+		local buybutton = NpCMenu:AddButton({icon ="🧑‍🔧 	",label = v.label,value = v,description = v.label , select = function(btn) 
+		local value = btn.Value.value
+
+		if value == "find_job" then
+			local num = math.random(1,#Config.NPC_RepairJobs)
+			local count = 0
+			while Config.NPC_RepairJobs[num].inUse and count < 100 do
+				count = count+1
+				num = math.random(1,#Config.NPC_RepairJobs)
+			end
+			if count == 100 then
+				ShowNotifyESX("Wait for a call")
+			else
+				Config.NPC_RepairJobs[num].inUse = true
+				Wait(200)
+				TriggerServerEvent('t1ger_mechanicjob:JobDataSV', Config.NPC_RepairJobs)
+				TriggerEvent('t1ger_mechanicjob:startJobWithNPC', num)
+			end
+		elseif value == "cancel_job" then
+			CancelCurrentJob()
+			OpenMechanicActionMenu()
+		end
+		
+		end })
+	end
+	--local firebutton = NpCMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["employee_job_grade"],value = "job_grade_manage",description = 'Grade Manager'  })
+--	local gradebutton = Grade:AddButton({icon ="🧑‍🔧 	",label = "Grade Manager",value = "job_grade_manage",description = 'Grade Manager'  })
+--	local confirm = Firemenu:AddConfirm({ icon = '🔥', 		label = 'Fire Employee?', value = false })	
+
 	 --[[ 	ESX.UI.Menu.Open('default', GetCurrentResourceName(), "mech_npc_job_menu",
 		 {
 			 title    = "NPC Job Menu",
