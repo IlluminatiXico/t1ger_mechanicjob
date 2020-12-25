@@ -9,7 +9,7 @@ Take from the original resource and modified to work with Qbus based servers, al
 - Buy, Rename, Shell shop
 - Lift
 - Crafting etc etc...
-
+https://streamable.com/72f96d
 To install this resource you need:
 
 MenuV from Tigo https://github.com/ThymonA/menuv
