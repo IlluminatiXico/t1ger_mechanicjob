@@ -3,6 +3,7 @@
 ------------
 
 if you think that my time deserve a coffe
+
 buymeacoff.ee/jericofx
 
 ------------
