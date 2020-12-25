@@ -24,7 +24,7 @@
 		 while RSCore == nil do
 			 TriggerEvent("RSCore:GetObject",function(obj)RSCore = obj
 				 end)
-			 Citizen.Wait(200)
+			 Citizen.Wait(1)
 		 end
 		 while true do
 			 player = PlayerPedId()
@@ -110,20 +110,16 @@ end)
 				 for k, v in ipairs(Config.MechanicShops) do
 					 if plyShopID == k then
 						 for _, y in pairs(ownedShops) do
-							
 							 if y.shopID == plyShopID then
-								
 								 CreateShopBlips(k, v, y.name)
-								 print(k.." | "..tostring(v.menuPos[1]).." | "..y.name)
 								 break
 							 end
 						 end
 					 else
 						 if emptyShops[k] == k then
 							 for _, y in pairs(ownedShops) do
-								 if y.id == k then
+								 if y.shopID == k then
 									 CreateShopBlips(k, v, y.name)
-									 print(k.." | "..v.." | "..y.name)
 								 end
 							 end
 						 else
@@ -295,8 +291,8 @@ function MechShopManageMenu(id, val)
 	end)
 	button4:On("select",function()
 
-		MenuV:CloseMenu(Manage1)
-		MenuV:CloseMenu(Manage)
+		Manage1:Close()
+		Manage:Close()
 
 	end)
 end
@@ -314,7 +310,7 @@ end
 		 return result
 	 end
  end
-function LocalInputInt(text, numeros, windoes) --SHOW ON SCREEN KEYBOARD FOR THE PRICE AND NAME
+function LocalInputInt(text, numeros, windoes) --SHOW ON SCREEN KEYBOARD FOR THE PRICE AND NAME BUT RETURN A NUMBER
 	DisplayOnscreenKeyboard(1, text or "FMMC_MPM_NA", "", windoes or "", "", "", "", numeros or 30)
 	while (UpdateOnscreenKeyboard() == 0) do
 		DisableAllControlActions(0)
@@ -408,7 +404,8 @@ end
 	 end)
 	 button = Manage:AddButton({ icon = "🧑‍🔧=> 	", label = Lang["hire_employee"], value = Manage1 })
 	 button1 = Manage:AddButton({ icon = "🧑‍🔧=>	", label = Lang["employee_list"], value = 1 })
-	--button3 = Manage1:AddButton({ icon = "🧑‍🔧=>	", label = "La Lista", value = 1 })
+	 botonvalue = nil
+	 
 -- GET ONLINE PLAYERS AND DISPLAY
 	 RSCore.Functions.TriggerCallback('t1ger_mechanicjob:getOnlinePlayers', function(players)
 		 local elements = {}
@@ -422,16 +419,19 @@ end
 		 end
 		 for k, v in ipairs(elements) do
 			 button3 = Manage1:AddButton({ icon = "🧑‍🔧	", label = v.label, value = v, select = function(btn)
-				 local buybutton2 = Manage1:AddConfirm({ icon = '🔥', label = 'Confirm', value = 'no' })
+				local buybutton2 = Manage1:AddConfirm({ icon = '🔥', label = 'Confirm', value = 'no' })
+				 botonvalue = btn
 				 buybutton2:On("confirm", function()
-					 local jobGrade = 0
-					 TriggerServerEvent('t1ger_mechanicjob:reqruitEmployee', id, RSCore.Functions.GetPlayerData(btn.Value.identifier).steam, btn.Value.name)
-					 MenuV:CloseMenu(Manage1)
-				 end)
-				 buybutton2:On("deny", function()
-					 MenuV:CloseMenu(Manage1)
-				 end)
+					local jobGrade = 0
+					TriggerServerEvent('t1ger_mechanicjob:reqruitEmployee', id, RSCore.Functions.GetPlayerData(botonvalue.Value.identifier).steam, botonvalue.Value.name)
+					MenuV:CloseMenu(Manage1)
+				end)
+				buybutton2:On("deny", function()
+					Manage1:Close()
+				end)
 			 end })
+			
+		
 		 end
 	 end)
 
@@ -448,18 +448,21 @@ end
 	 local elements = {}
 	 local assert = assert
 	 local menu = assert(MenuV)
-	 local Manage = MenuV:CreateMenu("Mech Shop [Employees]", '', 'topleft', 255, 0, 0, 'size-150')
+	 local Manage = MenuV:CreateMenu("Employee List", '', 'topleft', 255, 0, 0, 'size-150')
 	 MenuV:OpenMenu(Manage, function()
 	 end)
+	 local confirm = Manage:AddConfirm({ icon = '🔥', label = 'Fire Employee?', value = false })
 
 	 RSCore.Functions.TriggerCallback("t1ger_mechanicjob:getEmployees", function(employees)
-		print(employees)
-		 for k, v in pairs(employees) do
-			-- table.insert(elements, {label = v.firstname,identifier = v.identifier,jobGrade = v.jobGrade,data = v})
-			-- for k,v in ipairs(elements) do
-
+		--print(employees)
+		 for k, v in ipairs(employees) do
 				button3 = Manage:AddButton({ icon = "🧑‍🔧	", label = v.firstname.." "..v.lastname.." | "..v.jobGrade, value = v, select = function(btn)
-				   -- print(btn.Value.identifier)
+					local data = btn.Value
+					confirm:On("confirm",function()
+						OpenEmployeeData(data.current,data.current.data,id,val)
+					
+					end)
+
 				end })
 			--end
 		 end
@@ -477,11 +480,13 @@ end
 	 }
 	 local assert = assert
 	local menu = assert(MenuV)
-	 local ShellMenu = MenuV:CreateMenu("Confirm Sale | ","Price: $"..math.floor(sellPrice), 'size-150')
+	 local ShellMenu = MenuV:CreateMenu("| Employee Menu | ","Price: $", 'size-150')
 	 MenuV:OpenMenu(ShellMenu, function()
 	end)
 	local buybutton = BuyMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["fire_employee"],value = "fire_employee",description = 'Fire Employee'  })
 	local firebutton = BuyMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["employee_job_grade"],value = "job_grade_manage",description = 'Grade Manager'  })
+
+
 
 
  end
@@ -937,7 +942,7 @@ local elements = {}
  Citizen.CreateThread(function()
 		 while true do
 			 Citizen.Wait(1)
-			 if RSCore.Functions.GetPlayerData().job.name == "mechanic" then
+			 if PlayerJob and PlayerJob.name == "mechanic" then
 				 for num, shop in pairs(Config.MechanicShops) do
 					 local shopDist = GetDistanceBetweenCoords(coords.x,coords.y,coords.z,shop.menuPos[1],shop.menuPos[2],shop.menuPos[3],true)
 					 if shopDist < 20.0 then
@@ -3029,15 +3034,13 @@ end
  )
  
  AddEventHandler(
-	 "onResourceStart",
+	 "onClientResourceStart",
 	 function(resourceName)
 		 local ped = GetPlayerPed(-1)
 		 local coords = GetEntityCoords(ped)
-		 if (GetCurrentResourceName() ~= resourceName) then
-			 return
-		 end
+		
 		 TriggerServerEvent("t1ger_mechanicjob:fetchMechShops")
-		 vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71)
+		 vehicle = GetClosestVehicle(coords.x, coords.y, coords.z, 5.0, 0, 71) --What this does is unfreeze the car if you restart the script
 		 if vehicle then
 			 FreezeEntityPosition(vehicle, false)
 		 else
@@ -3065,25 +3068,13 @@ end
 					end
 					
 				 end
-				
-		 --elements = {}
-		 --for k, v in pairs(Config.Materials) do
-		 --
-		 --
-			-- for h, j in pairs(Config.HealthParts) do
-			--	 h = k
-			--	 local itemvalor = v.item
-			--	-- table.insert(elements, { id = valor1, label = j.label, materials = j.materials })
-			--	 local valorid = j.materials[1].id
-			--	 print()
-			-- end
-		 --end
+			
 
 	 end
  )
  
 
- SpawnObject = function(model, coords, cb, networked, dynamic)
+ SpawnObject = function(model, coords, cb, networked, dynamic) --#CREDITS TO ESX FOR THIS FUNCTION
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or false
 	dynamic = dynamic ~= nil and true or false

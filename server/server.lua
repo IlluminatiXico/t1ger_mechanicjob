@@ -11,21 +11,14 @@ AddEventHandler('t1ger_mechanicjob:fetchMechShops', function()
     local DataFected = false
 	for i = 1, #xPlayers, 1 do
         local xPlayer = RSCore.Functions.GetPlayer(xPlayers[i])
-       -- print("FROM PLY ".. xPlayer.PlayerData.source)
 		table.insert(players, { source = xPlayer.PlayerData.source, identifier = xPlayer.PlayerData.steam, shopID = 0 })
     end
-   -- print(players)
     exports['ghmattimysql']:execute("SELECT * FROM t1ger_mechanic", {}, function(results)
         if #results > 0 then 
             for l,ply in pairs(players) do
-                --print("FROM PLY "..ply.identifier)
                 for k,v in pairs(results) do
                     if ply.identifier == v.identifier then
-                       
-                      --  print(ply.identifier)
-                      --  print(v.identifier)
                         ply.shopID = v.shopID
-                      --  print(ply.shopID)
                     end
                     if k == #results then DataFected = true end
                     
@@ -38,12 +31,11 @@ AddEventHandler('t1ger_mechanicjob:fetchMechShops', function()
     while not DataFected do Wait(5) end
     local plyShopID = 0
     if DataFected then 
-       -- print("LLAMADO ")
         for k,v in pairs(players) do
             if v.shopID > 0 then plyShopID = v.shopID else plyShopID = 0 end
-
+           
             TriggerClientEvent('t1ger_mechanicjob:fetchMechShopsCL', v.source, plyShopID)
-            
+           
         end
     end
 
