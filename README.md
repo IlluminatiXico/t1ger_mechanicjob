@@ -27,6 +27,7 @@ MenuV from Tigo https://github.com/ThymonA/menuv
 
 Run this SQL code : 
 > CREATE TABLE t1ger_mechanic ( citizenid varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL, shopID INT(11), name varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL DEFAULT "Mechanic Shop", money INT(11) NOT NULL DEFAULT 0, employees longtext NOT NULL DEFAULT '[]', storage longtext NOT NULL DEFAULT '[]', PRIMARY KEY (shopID) );
+
 ALTER TABLE player_vehicles ADD health longtext NOT NULL DEFAULT '[{"value":100,"part":"electronics"},{"value":100,"part":"fuelinjector"},{"value":100,"part":"brakes"},{"value":100,"part":"radiator"},{"value":100,"part":"driveshaft"},{"value":100,"part":"transmission"},{"value":100,"part":"clutch"}]';
 
 this will add a Heath table to the player_vehicles
