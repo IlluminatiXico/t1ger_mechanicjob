@@ -216,19 +216,22 @@ end)
 -- Fire Employee:
 RegisterServerEvent('t1ger_mechanicjob:updateEmployeJobGrade')
 AddEventHandler('t1ger_mechanicjob:updateEmployeJobGrade', function(id, plyIdentifier, newJobGrade)
+    print("llego algo?")
     local xPlayer = RSCore.Functions.GetPlayer(source)
 
-    print("inventario"..xPlayer.PlayerData.items.name)
+    --print("inventario"..xPlayer.PlayerData.items.name)
     exports['ghmattimysql']:execute("SELECT employees FROM t1ger_mechanic WHERE shopID = @shopID", {['@shopID'] = id}, function(data)
         if data[1].employees ~= nil then 
             local employees = json.decode(data[1].employees)
             if #employees > 0 then 
                 for k,v in pairs(employees) do 
                     if plyIdentifier == v.identifier then
-                        local xTarget = RSCore.Functions.GetIdentifier(plyIdentifier,"steam")
-                        local grade = RSCore.Shared.Jobs["mechanic"]["grades"]["label"]
+                        local xTarget = RSCore.Functions.GetPlayer(plyIdentifier)
+                        local grade = RSCore.Shared.Jobs["mechanic"].grades
+                        
                         for j,c in ipairs(grade) do
-                        if newJobGrade >= 0 and newJobGrade <= c.grade then
+                            print("GRADO "..tostring(j))
+                        if newJobGrade >= 0 and newJobGrade <= j then
                             if xTarget.PlayerData.job.grade ~= newJobGrade then 
                                 v.jobGrade = newJobGrade
                                 exports.ghmattimysql:executeSync("UPDATE t1ger_mechanic SET employees = @employees WHERE shopID = @shopID", {
@@ -237,13 +240,13 @@ AddEventHandler('t1ger_mechanicjob:updateEmployeJobGrade', function(id, plyIdent
                                 })
                                 xTarget.Functions.SetJob("mechanic", tonumber(newJobGrade))
                                 Wait(200)
-                                TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['you_updat_job_grade_for']:format(xTarget.getName(), newJobGrade)))
+                                TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['you_updat_job_grade_for']:format(xTarget.PlayerData.charinfo.firstname, newJobGrade)))
                                 TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xTarget.PlayerData.source, (Lang['your_job_grade_updated']:format(newJobGrade)))
                             else
-                                TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['target_alrdy_has_job_g']:format(xTarget.getName())))
+                                TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['target_alrdy_has_job_g']:format(xTarget.PlayerData.charinfo.firstname)))
                             end
                         else
-                            TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['mix_max_job_grade']:format(results[#results].grade)))
+                            TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['mix_max_job_grade']:format(j)))
                         end
                         end
                     end 

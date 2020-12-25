@@ -482,20 +482,43 @@ end
 	local menu = assert(MenuV)
 	 local ShellMenu = MenuV:CreateMenu("Employee: "..user.firstname,"", 'size-150')
 	 local Firemenu = MenuV:CreateMenu("Fire "..user.firstname,"", 'size-150')
+	 local Grade = MenuV:CreateMenu("Current Job Grade: "..user.jobGrade,"", 'size-150')
 	 MenuV:OpenMenu(ShellMenu, function()
 	end)
 	local buybutton = ShellMenu:AddButton({icon ="🧑‍🔧 	",label = "Fire?",value = "fire_employee",description = 'Fire Employee'  })
 	local firebutton = ShellMenu:AddButton({icon ="🧑‍🔧 	",label = Lang["employee_job_grade"],value = "job_grade_manage",description = 'Grade Manager'  })
-	local confirm = Firemenu:AddConfirm({ icon = '🔥', label = 'Fire Employee?', value = false })	
+	local gradebutton = Grade:AddButton({icon ="🧑‍🔧 	",label = "Grade Manager",value = "job_grade_manage",description = 'Grade Manager'  })
+	
+	local confirm = Firemenu:AddConfirm({ icon = '🔥', 		label = 'Fire Employee?', value = false })	
 	buybutton:On("select",function()
 		MenuV:OpenMenu(Firemenu)
 		
 		confirm:On("confirm",function()
 			print("From Confirm"..user.identifier)
 			TriggerServerEvent('t1ger_mechanicjob:fireEmployee',id,user.identifier)
+			Firemenu:Close()
+			EmployeesMainMenu(id,val)
+		end)
+		confirm:On("deny",function()
+			Firemenu:Close()
+			ShellMenu:Close()
+			EmployeesMainMenu(id,val)
 		end)
 	
 	end)
+	firebutton:On("select",function()
+		MenuV:OpenMenu(Grade)
+	end)
+	gradebutton:On("select",function()
+	local newJobGrade = LocalInputInt("jobgrade",2,1)
+	--if newJobGrade == "number" then
+		print("id"..id.." Iden "..user.identifier.." New Grade "..newJobGrade)
+		TriggerServerEvent('t1ger_mechanicjob:updateEmployeJobGrade',id,user.identifier,newJobGrade)
+		Grade:Close()
+	--end
+
+	end)
+	
 	
 
 
