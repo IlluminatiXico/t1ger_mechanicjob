@@ -1172,7 +1172,7 @@ end)
 			 {label = "Vehicle Engine Repair", value = 5},
 			 {label = "Vehicle Body Repair", value = 6},
 			 {label = "NPC Jobs", value = 7},
-			 {label = "Objects", value = 8}
+		--	 {label = "Objects", value = 8}
 
 		 }
 		 local assert = assert
@@ -1180,9 +1180,9 @@ end)
 		  MechMenu1 = MenuV:CreateMenu("MECHANIC MENU","", 'size-150')
 		 MenuV:OpenMenu(MechMenu1, function()
 		 end)
-		 local buybutton = MechMenu1:AddButton({icon ="🧑‍🔧 	",label = "Close Menu" , value = 1,description = 'Close the Menu'  })
+		-- local buybutton = MechMenu1:AddButton({icon ="🧑‍🔧 	",label = "Close Menu" , value = 1,description = 'Close the Menu'  })
 		 for k, v in ipairs(elements) do
-			 local mechmenubutton = MechMenu1:AddButton({ icon = "🧑‍🔧 	", label = v.label, value = v, description = v.label, select = function(btn)
+			local mechmenubutton = MechMenu1:AddButton({ icon = "🧑‍🔧 	", label = v.label, value = v, description = v.label, select = function(btn)
 				 local value = btn.Value.value
 				 if value == 1 then
 					 local amount = LocalInput("amount", 20, 1)
@@ -1214,21 +1214,19 @@ end)
 					-- MenuV:CloseMenu(MechMenu1)
 				 elseif value == 7 then
 					 ManageNpcJobs()
-					elseif value == 8 then
-						CarryObjectsMainMenu()
+					--[[ elseif value == 8 then
+						CarryObjectsMainMenu() ]]
 				 end
 
 
-			 end })
+			end })
 
 
 
-			 end
-		 buybutton:On("select",function()
-			 MenuV:CloseMenu(MechMenu1)
-			 MechMenu1:Close()
+			end
+		 		
 	
-		 end)
+		
 	end
  end
  
