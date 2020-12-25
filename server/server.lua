@@ -895,9 +895,9 @@ end)
 
 
 RegisterServerEvent('t1ger_mechanicjob:JobReward')
-AddEventHandler('t1ger_mechanicjob:JobReward',function(payout)
+AddEventHandler('t1ger_mechanicjob:JobReward',function()
     local xPlayer = RSCore.Functions.GetPlayer(source)
-    local cash = math.random(payout.min,payout.max)
+    local cash = Config.Payout
     xPlayer.Functions.AddMoney("cash",cash)
     TriggerClientEvent('t1ger_mechanicjob:ShowNotifyESX', xPlayer.PlayerData.source, (Lang['npc_job_cash_reward']:format(cash)))
 end)
