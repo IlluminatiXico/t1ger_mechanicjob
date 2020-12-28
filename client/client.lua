@@ -24,7 +24,7 @@
 		 while RSCore == nil do
 			 TriggerEvent("RSCore:GetObject",function(obj)RSCore = obj
 				 end)
-			 Citizen.Wait(1)
+			 Citizen.Wait(400)
 		 end
 		 while true do
 			 player = PlayerPedId()

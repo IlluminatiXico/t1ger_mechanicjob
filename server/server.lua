@@ -97,7 +97,7 @@ RSCore.Functions.CreateCallback('t1ger_mechanicjob:getVehDegradation',function(s
         if data[1]  ~= nil then
             local health = json.decode(data[1].health)
             cb(health)
-
+            
         end
     end)
 end)
