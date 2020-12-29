@@ -1696,8 +1696,8 @@ end
 											 table.insert(array, item.label)
 										 end
 										 local items = table.concat(array, ", ")
-										 RSCore.Functions.Notify("*" ..h.label .." [" ..items .. "] » " .. round(partValue, 2) .. " / 10.0")
-										-- local chatMsg = "^*" ..h.label .." ^5[^6" ..items .. "^5] ^0» ^3" .. round(partValue, 2) .. "^0 / ^210.0^0" TriggerEvent("chat:addMessage", {args = {chatMsg}})
+										-- RSCore.Functions.Notify("*" ..h.label .." [" ..items .. "] » " .. round(partValue, 2) .. " / 10.0")
+										 local chatMsg = "^*" ..h.label .." ^5[^6" ..items .. "^5] ^0» ^3" .. round(partValue, 2) .. "^0 / ^210.0^0" TriggerEvent("chat:addMessage", {args = {chatMsg}})
 									 end
 								 end
 							 end
@@ -1869,6 +1869,7 @@ end
 	 local label = ""
 	 if isJackRaised then
 		 label = Lang["progbar_lowering_jack"]
+		 vehAnalysed = false
 	 else
 		 label = Lang["progbar_raising_jack"]
 	 end
@@ -2223,6 +2224,10 @@ end
  
  function RefreshVehicleDamage(vehicle, plate)
 	 SetVehicleFixed(vehicle)
+	 SetVehicleDirtLevel(
+	vehicle --[[ Vehicle ]], 
+	0.0 --[[ number ]]
+)
 	 for i = 0, GetNumberOfVehicleDoors(vehicle) + 1 do
 		 if vehicleData[plate].report.doors[i + 1] == true then
 			 SetVehicleDoorBroken(vehicle, i, true)
