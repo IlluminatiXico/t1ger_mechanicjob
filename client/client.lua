@@ -3088,25 +3088,7 @@ end
 		 ClearPedSecondaryTask(player)
 		 Wait(500)
 		 local item =GetHashKey("prop_carjack") 
-		 local findObj =
-					 GetClosestObjectOfType(
-					 coords.x,
-					 coords.y,
-					 coords.z,
-					 1.0,
-					 item,
-					 false,
-					 false,
-					 false
-				 )
-				 if findObj then
-					if DoesEntityExist(item) then
-						print(true)
-					DeleteEntity(item)
-					 DeleteObject(item)
-					end
-					
-				 end
+		
 			
 
 	 end
