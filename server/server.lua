@@ -76,7 +76,7 @@ RSCore.Functions.CreateCallback('t1ger_mechanicjob:getIfVehicleOwned', function 
     }, function (result)
 
         local vehicles = {}
-
+if result ~= nil then
         for i=1, #result, 1 do
             vehicleData = json.decode(result[i].mods)
             if vehicleData.plate == plate then
@@ -89,6 +89,7 @@ RSCore.Functions.CreateCallback('t1ger_mechanicjob:getIfVehicleOwned', function 
         if not found then
             cb(nil)
         end
+    end
     end)
 end)
 RSCore.Functions.CreateCallback('t1ger_mechanicjob:getVehDegradation',function(source, cb, plate)
