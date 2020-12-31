@@ -15,6 +15,10 @@ Take from the original resource and modified to work with Qbus based servers, al
 - Lift
 - Crafting etc etc...
 
+# IMPORTANT INFORMATION
+
+I found a fix to the Nil values in the server console, it happend because when we are in the selection menu, the resource want an id, at that momento we dont have that, so the fix i found is going to the rs-spawn (qb-spawn) in this part https://prnt.sc/wdv3av  put the trigger event in this case is   TriggerEvent("t1ger_mechanicjob:getPlayerIden") like the image.
+
 
 https://streamable.com/72f96d
 
