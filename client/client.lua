@@ -18,7 +18,7 @@
  curVehicle = nil
  driver = nil
  jerico = 0
- 
+ playerloaded = false
  Citizen.CreateThread(
 	 function()
 		 while RSCore == nil do
@@ -33,6 +33,7 @@
 			 driver = GetPedInVehicleSeat(curVehicle, -1)
 			 Citizen.Wait(100)
 		 end
+		
 
 	 end
  )
@@ -42,8 +43,9 @@
 
 RegisterNetEvent('RSCore:Client:OnPlayerLoaded')
 AddEventHandler('RSCore:Client:OnPlayerLoaded', function()
+	playerloaded = true
 	PlayerJob = RSCore.Functions.GetPlayerData().job
-	TriggerServerEvent("t1ger_mechanicjob:fetchMechShops")
+	
 end)
 
 RegisterNetEvent('RSCore:Client:OnJobUpdate')
@@ -52,6 +54,10 @@ AddEventHandler('RSCore:Client:OnJobUpdate', function(JobInfo)
 end)
 
 
+RegisterNetEvent("t1ger_mechanicjob:getPlayerIden")
+AddEventHandler("t1ger_mechanicjob:getPlayerIden", function()
+	TriggerServerEvent("t1ger_mechanicjob:fetchMechShops")
+end)
 Citizen.CreateThread(function()
 	Wait(500)
 	if RSCore.Functions.GetPlayerData() ~= nil then
